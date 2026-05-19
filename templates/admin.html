@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración · Monitor Docente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- ── HEADER ─────────────────────────────────────────── -->
+        <header class="dashboard-header">
+            <div class="header-left" style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="header-logos" style="display: flex; gap: 1rem; align-items: center;">
+                    <img src="{{ url_for('static', filename='img/logo_agrotec.png') }}" alt="Agrotec" style="height: 50px; object-fit: contain;">
+                </div>
+                <div class="header-content">
+                    <h1><span class="emoji-fix">⚙️</span> Panel de Control</h1>
+                    <p class="subtitle">Gestión de Rostros y Profesores</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="/" class="btn-back">⬅ Volver al Monitor</a>
+            </div>
+        </header>
+
+        <main class="admin-grid fade-in">
+            <!-- PANEL: Registrar Profesor -->
+            <section class="panel admin-panel">
+                <div class="panel-header">
+                    <h2>Registrar Nuevo Profesor</h2>
+                </div>
+                <div class="panel-body">
+                    <form id="add-teacher-form">
+                        <div class="form-group">
+                            <label for="prof_id">ID Corto (Nombre de carpeta sin espacios)</label>
+                            <input type="text" id="prof_id" name="prof_id" placeholder="ej. juan_perez" required pattern="[a-zA-Z0-9_-]+">
+                            <small>Solo letras, números y guiones bajos.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nombre_display">Nombre a mostrar en pantalla</label>
+                            <input type="text" id="nombre_display" name="nombre_display" placeholder="ej. Prof. Juan Pérez" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="asignatura">Asignatura (Opcional)</label>
+                            <input type="text" id="asignatura" name="asignatura" placeholder="ej. Matemáticas">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avatar_color">Color del Anillo/Tema</label>
+                            <input type="color" id="avatar_color" name="avatar_color" value="#10b981">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fotos">Cargar Fotos (Recomendado 2 a 5 imágenes frontales)</label>
+                            <input type="file" id="fotos" name="fotos" accept="image/jpeg, image/png, image/webp" multiple required>
+                            <small>La primera imagen será usada como foto de perfil principal (avatar.jpg).</small>
+                        </div>
+
+                        <button type="submit" class="btn-primary" id="btn-submit">Guardar Profesor</button>
+                    </form>
+                    <div id="form-msg" class="message-box" style="display: none;"></div>
+                </div>
+            </section>
+
+            <!-- PANEL: Entrenamiento Facial -->
+            <section class="panel train-panel">
+                <div class="panel-header">
+                    <h2>Motor de Inteligencia Artificial</h2>
+                </div>
+                <div class="panel-body info-box">
+                    <p>Cuando añades nuevos profesores o nuevas fotos, el motor debe extraer de nuevo la firma biométrica de todos para que las cámaras puedan reconocerlos.</p>
+                    <div class="alert-box">
+                        <span class="emoji-fix">⚠️</span> Esto no detendrá la transmisión de video actual, pero tardará unos segundos.
+                    </div>
+                    
+                    <button id="btn-train" class="btn-secondary">Reescanear y Entrenar Modelos</button>
+                    
+                    <div id="train-msg" class="message-box" style="display: none;"></div>
+                </div>
+            </section>
+
+            <!-- PANEL: Mantenimiento -->
+            <section class="panel" style="grid-column: 1 / -1; margin-bottom: 2rem;">
+                <div class="panel-header" style="background: rgba(239, 68, 68, 0.1); border-bottom-color: #ef4444;">
+                    <h2 style="color: #ef4444;">Mantenimiento Diario</h2>
+                </div>
+                <div class="panel-body" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h3 style="color: white; margin-top: 0;">Fin de la Jornada (Reset)</h3>
+                        <p style="margin: 0; font-size: 0.9rem;">Como la cámara marca presencias persistentes, usa este botón para forzar que <b>todos pasen a estado Ausente</b> como cierre de local si alguien no pasó por la Salida.</p>
+                    </div>
+                    <button id="btn-reset" class="btn-secondary" style="background: #ef4444; width: auto; padding: 1rem 2rem; margin: 0; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);">Marcar todos Ausentes</button>
+                    <div id="reset-msg" class="message-box" style="display: none; width: 100%;"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

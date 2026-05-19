@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Sistema de monitoreo de presencia docente en tiempo real usando reconocimiento facial.">
+    <title>Monitor de Presencia · En Vivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <!-- ── MARCA DE AGUA ─────────────────────────────────── -->
+    <div class="watermark-overlay" aria-hidden="true">
+        <div class="watermark-grid">
+            {% for i in range(40) %}
+            <img src="{{ url_for('static', filename='img/logo_agrotec.png') }}" alt="" class="watermark-logo">
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="app-container">
+
+        <!-- ── HEADER ─────────────────────────────────────────── -->
+        <header class="dashboard-header">
+            <div class="header-left" style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="header-logos" style="display: flex; gap: 1rem; align-items: center;">
+                    <img src="{{ url_for('static', filename='img/logo_agrotec.png') }}" alt="Agrotec"
+                        style="height: 50px; object-fit: contain;">
+                    <img src="{{ url_for('static', filename='img/logo_sna.png') }}" alt="SNA Educa"
+                        style="height: 50px; object-fit: contain;">
+                </div>
+                <div class="header-content">
+                    <h1 style="display: flex; justify-content: space-between; width: 100%;">
+                        <span><span class="emoji-fix">👁️</span> Monitor de Presencia</span>
+                        <a href="/admin" target="_blank" class="admin-btn" title="Panel de Administración"
+                            style="text-decoration: none; font-size: 1.2rem; transition: transform 0.2s;">⚙️</a>
+                    </h1>
+                    <p class="subtitle">Detección facial en tiempo real · Cámara activa</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="system-status">
+                    <span class="status-indicator live" id="cam-indicator"></span>
+                    <span id="cam-label">Cámara activa</span>
+                </div>
+                <div class="clock-box">
+                    <div class="clock-date-section">
+                        <span class="clock-weekday" id="live-weekday">---</span>
+                        <span class="live-date" id="live-date">-- de --- de ----</span>
+                    </div>
+                    <div class="clock-divider"></div>
+                    <div class="clock-time-section">
+                        <span class="clock" id="live-clock">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ── MAIN GRID ───────────────────────────────────────── -->
+        <main class="dashboard-grid">
+
+            <!-- Panel Presentes -->
+            <section class="panel present-panel">
+                <div class="panel-header">
+                    <h2><span class="dot present-dot"></span>Presentes ahora</h2>
+                    <div class="header-right-group" style="display: flex; align-items: center; gap: 1.5rem;">
+                        <div class="refresh-info" style="margin-left: 0;">
+                            <span class="pulse-dot"></span>
+                            <span id="refresh-label">Actualizando...</span>
+                        </div>
+                        <div class="stats-bar">
+                            <div class="stat-card present-stat">
+                                <span class="stat-number" id="count-present">{{ present_count }}</span>
+                                <span class="stat-label">Presentes</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-card absent-stat">
+                                <span class="stat-number" id="count-absent">{{ absent_count }}</span>
+                                <span class="stat-label">Ausentes</span>
+                            </div>
+                            <div class="stat-divider"></div>
+                            <div class="stat-card total-stat">
+                                <span class="stat-number">{{ teachers | length }}</span>
+                                <span class="stat-label">Total</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="teacher-list" id="list-present">
+                    {% for teacher in teachers %}
+                    {% if teacher.status == 'present' %}
+                    <div class="teacher-card present-card fade-in"
+                        id="card-{{ teacher.id | replace(' ', '-') | replace('.', '') }}">
+                        <div class="avatar-container">
+                            {% if teacher.avatar_url %}
+                            <img class="avatar-photo" src="{{ teacher.avatar_url }}" alt="{{ teacher.nombre }}"
+                                style="--accent: {{ teacher.avatar_color }}"
+                                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="avatar-initials" style="--accent: {{ teacher.avatar_color }}; display:none">
+                                {{ teacher.nombre[0] | upper }}
+                            </div>
+                            {% else %}
+                            <div class="avatar-initials" style="--accent: {{ teacher.avatar_color }}">
+                                {{ teacher.nombre[0] | upper }}
+                            </div>
+                            {% endif %}
+                            <div class="status-ring present-ring"></div>
+                        </div>
+                        <div class="teacher-info">
+                            <h3>{{ teacher.nombre }}</h3>
+                            <p>{{ teacher.asignatura }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% if present_count == 0 %}
+                    <div class="empty-state" id="empty-present">
+                        <span class="empty-icon">📷</span>
+                        <p>Ningún profesor detectado aún</p>
+                        <small>La cámara está analizando...</small>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Datos de profesores para el JS (no depender de Jinja en el polling) -->
+    <script type="application/json" id="teacher-meta-data">
+        {{ teachers | tojson | safe }}
+    </script>
+    <script>
+        window.TEACHER_META = JSON.parse(document.getElementById('teacher-meta-data').textContent);
+    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
