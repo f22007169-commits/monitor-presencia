@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Presencia - Panel de Control</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .badge {
+            background-color: #27ae60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .grid {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-item {
+            flex: 1;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+        }
+        .grid-item h3 {
+            margin-top: 0;
+            color: #7f8c8d;
+        }
+        .grid-item .value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: #95a5a6;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🖥️ Monitor de Presencia</h1>
+        <span class="badge">Vista Estática Activa</span>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Manual de Configuración y Presentación</h2>
+            <p>Bienvenido a la interfaz estática del <strong>Monitor de Presencia</strong>. Esta página sirve como documentación de acceso rápido y manual de ejecución para el sistema de reconocimiento y registro facial desarrollado en Python.</p>
+            
+            <div class="grid">
+                <div class="grid-item">
+                    <h3>Modelos Cargados</h3>
+                    <div class="value">embeddings.pkl</div>
+                </div>
+                <div class="grid-item">
+                    <h3>Script Principal</h3>
+                    <div class="value">app.py</div>
+                </div>
+                <div class="grid-item">
+                    <h3>Lenguaje</h3>
+                    <div class="value">Python 96%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🚀 Instrucciones para Ejecución Local</h2>
+            <p>Para levantar la aplicación completa con todas sus funciones de backend en tu entorno local, ejecuta los siguientes comandos en tu terminal:</p>
+            <ol>
+                <li><strong>Instalar Dependencias:</strong> <code>pip install -r requirements.txt</code></li>
+                <li><strong>Ejecutar el Servidor:</strong> Ejecuta el archivo <code>INCIAR.bat</code> o directamente usando <code>python app.py</code></li>
+                <li><strong>Acceder a la App:</strong> Abre tu navegador e ingresa a <code>http://localhost:5000</code></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="footer">
+        Desplegado automáticamente mediante GitHub Pages • monitor-presencia
+    </div>
+
+</body>
+</html>
